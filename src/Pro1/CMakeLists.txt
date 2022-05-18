@@ -1,13 +1,13 @@
-set(MODULE_NAME programUI)
+set(MODULE_NAME pro1)
 
 message("compile ${MODULE_NAME}")
 
 set(INTERNAL_FILES
-    ProgramUI.cpp
+    Pro1.cpp
 )
 
 set(PUBLIC_HEADERS
-    ProgramUI.hpp
+    Pro1.hpp
 )
 
 add_library(
@@ -25,8 +25,8 @@ target_include_directories(
 )
 
 target_link_libraries(${MODULE_NAME}
+  PRIVATE
   lib::gate
-  lib::pro1
 )
 
 add_library(lib::${MODULE_NAME} ALIAS ${MODULE_NAME})

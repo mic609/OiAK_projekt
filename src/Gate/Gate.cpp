@@ -2,93 +2,87 @@
 
 #include <iostream>
 
-int Gate::f_not(int inp){
-
-    int outp = inp;
-
-    if(outp == 0) outp = 1;
-    if(outp == 1) outp = 0;
-
-    return outp;
+Gate::Gate(){
+    g_outp = 0; 
 }
 
-int Gate::f_and(int* inp, int n){
+int Gate::gateValue(){
+    return g_outp;
+}
+
+void Gate::f_not(int inp){
+
+    g_outp = inp;
+
+    if(g_outp == 0) g_outp = 1;
+    else if(g_outp == 1) g_outp = 0;
+}
+
+void Gate::f_and(int* inp, int n){
 
     for(int i = 0; i < n; i++)
         if(inp[i] < 0 || inp[i] > 1)
             std::cout << "Wrong number of an input. It should be 0 or 1";
 
-    int outp;
     for(int i = 0; i < n; i++){
         if(!inp[i]){
-            outp = 0;
+            g_outp = 0;
             break;
         }
-        else outp = 1;
-    } 
-
-    return outp;
+        else g_outp = 1;
+    }
 }
 
-int Gate::f_or(int* inp, int n){
+void Gate::f_or(int* inp, int n){
 
     for(int i = 0; i < n; i++)
         if(inp[i] < 0 || inp[i] > 1)
             std::cout << "Wrong number of an input. It should be 0 or 1";
 
-    int outp;
     for(int i = 0; i < n; i++){
         if(inp[i]){
-            outp = 1;
+            g_outp = 1;
             break;
         }
-        else outp = 0;
+        else g_outp = 0;
     }
-
-    return outp;
 }
 
-int Gate::f_nand(int* inp, int n){
+void Gate::f_nand(int* inp, int n){
     for(int i = 0; i < n; i++)
         if(inp[i] < 0 || inp[i] > 1)
             std::cout << "Wrong number of an input. It should be 0 or 1";
 
-    int outp;
     for(int i = 0; i < n; i++){
-        if(inp[i]){
-            outp = 1;
+        if(!inp[i]){
+            g_outp = 0;
             break;
         }
-        else outp = 0;
+        else g_outp = 1;
     }
 
-    if(outp) outp = 0;
-    else outp = 1;
-
-    return outp;
+    if(g_outp) g_outp = 0;
+    else g_outp = 1;
 }
 
-int Gate::f_nor(int* inp, int n){
+void Gate::f_nor(int* inp, int n){
     for(int i = 0; i < n; i++)
         if(inp[i] < 0 || inp[i] > 1)
             std::cout << "Wrong number of an input. It should be 0 or 1";
 
-    int outp;
     for(int i = 0; i < n; i++){
         if(inp[i]){
-            outp = 1;
+            g_outp = 1;
             break;
         }
-        else outp = 0;
+        else g_outp = 0;
     }
 
-    if(outp) outp = 0;
-    else outp = 1;
-
-    return outp;
+    if(g_outp) g_outp = 0;
+    else g_outp = 1;
 }
 
-int Gate::f_ao222(int* inp){
+void Gate::f_ao222(int* inp){
     Gate* andg; // bramka and
     Gate norg; // bramka nor
     int* andoutp = new int[3]; // dane wyjsciowe z bramek and
@@ -105,20 +99,20 @@ int Gate::f_ao222(int* inp){
             k++;
         }
 
-        andoutp[and_num] = andg[and_num].f_and(andinp, 2); // wyjscie pojedynczej bramki and
+        andg[and_num].f_and(andinp, 2); // obliczamy wyjscie
+        andoutp[and_num] = andg[and_num].gateValue(); // wyjscie pojedynczej bramki and
         and_num ++;
         delete [] andinp;
     }
 
-    int output = norg.f_or(andoutp, 3); // obliczamy finalne wyjscie na podstawie wczesniej obliczonych wyjsc bramek and
+    norg.f_or(andoutp, 3); // obliczamy finalne wyjscie na podstawie wczesniej obliczonych wyjsc bramek and
+    g_outp = norg.gateValue();
 
     delete [] andoutp;
     delete [] andg;
-
-    return output;
 }
 
-int Gate::f_aoi22(int* inp){
+void Gate::f_aoi22(int* inp){
 
     Gate* andg; // bramki and
     Gate norg; // bramka nor
@@ -136,15 +130,15 @@ int Gate::f_aoi22(int* inp){
             k++;
         }
 
-        andoutp[and_num] = andg[and_num].f_and(andinp, 2); // wyjscie pojedynczej bramki and
+        andg[and_num].f_and(andinp, 2); // obliczamy wyjscie
+        andoutp[and_num] = andg[and_num].gateValue(); // wyjscie pojedynczej bramki and
         and_num ++;
         delete [] andinp;
     }
 
-    int output = norg.f_nor(andoutp, 2); // obliczamy finalne wyjscie na podstawie wczesniej obliczonych wyjsc bramek and
+    norg.f_nor(andoutp, 2); // obliczamy finalne wyjscie na podstawie wczesniej obliczonych wyjsc bramek and
+    g_outp = norg.gateValue();
 
     delete [] andoutp;
     delete [] andg;
-
-    return output;
 }

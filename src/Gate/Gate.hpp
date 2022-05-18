@@ -3,15 +3,21 @@
 
 class Gate{
 
+    
+    private:
+    int g_outp;
+
     public:
 
-    int f_not(int);
-    int f_and(int*, int);
-    int f_or(int*, int);
-    int f_nand(int*, int);
-    int f_nor(int*, int);
-    int f_ao222(int*);
-    int f_aoi22(int*);
+    Gate();
+    int gateValue();
+    void f_not(int);
+    void f_and(int*, int);
+    void f_or(int*, int);
+    void f_nand(int*, int);
+    void f_nor(int*, int);
+    void f_ao222(int*);
+    void f_aoi22(int*);
 };
 
 
