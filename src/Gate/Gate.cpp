@@ -82,6 +82,21 @@ void Gate::f_nor(int* inp, int n){
     else g_outp = 1;
 }
 
+void Gate::f_xor(int* inp, int n){
+    for(int i = 0; i < n; i++)
+        if(inp[i] < 0 || inp[i] > 1)
+            std::cout << "Wrong number of an input. It should be 0 or 1";
+
+    int xor_counter = 0;
+
+    for(int i = 0; i < n; i++)
+        if(inp[i])
+            xor_counter ++;
+
+    if((xor_counter % 2) == 0) g_outp = 0;
+    else g_outp = 1;
+}
+
 void Gate::f_ao222(int* inp){
     Gate* andg; // bramka and
     Gate norg; // bramka nor

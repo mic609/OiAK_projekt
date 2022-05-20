@@ -16,6 +16,7 @@ class Gate{
     void f_or(int*, int);
     void f_nand(int*, int);
     void f_nor(int*, int);
+    void f_xor(int*, int);
     void f_ao222(int*);
     void f_aoi22(int*);
 };
