@@ -1,13 +1,13 @@
-set(MODULE_NAME programUI)
+set(MODULE_NAME multiplier)
 
 message("compile ${MODULE_NAME}")
 
 set(INTERNAL_FILES
-    ProgramUI.cpp
+    Multiplier.cpp
 )
 
 set(PUBLIC_HEADERS
-    ProgramUI.hpp
+    Multiplier.hpp
 )
 
 add_library(
@@ -25,9 +25,10 @@ target_include_directories(
 )
 
 target_link_libraries(${MODULE_NAME}
-  lib::gate
+  PRIVATE
+  lib::adder
   lib::pro1
-  lib::multiplier
+  lib::exact
 )
 
 add_library(lib::${MODULE_NAME} ALIAS ${MODULE_NAME})

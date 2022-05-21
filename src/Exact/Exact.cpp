@@ -24,8 +24,12 @@ void Exact::circuit(int* inp, int c_in){
 
     int* tabA = new int[3];
 
-    for(int i = 0; i < 3; i++)
-        tabA[i] = inp[i];
+    int j = 3;
+
+    for(int i = 0; i < 3; i++){
+        tabA[i] = inp[j];
+        j--;
+    }
 
     adder1.full_circuit(tabA);
 
@@ -33,7 +37,7 @@ void Exact::circuit(int* inp, int c_in){
 
     tabA = new int[3];
     tabA[0] = adder1.getS();
-    tabA[1] = inp[3];
+    tabA[1] = inp[0];
     tabA[2] = c_in;
 
     adder2.full_circuit(tabA);

@@ -5,6 +5,7 @@ message("compile ${MODULE_NAME} For run type ./src/bin")
 add_subdirectory(Adder)
 add_subdirectory(Exact)
 add_subdirectory(Gate)
+add_subdirectory(Multiplier)
 add_subdirectory(Pro1)
 add_subdirectory(ProgramUI)
 
