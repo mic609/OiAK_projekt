@@ -6,16 +6,6 @@
 #include<iostream>
 
 Multiplier::Multiplier(){
-        // result = new int [15];
-
-        // matrixFS = new int *[8]; // wierszy
-        // matrixSS = new int *[4];
-
-        // for(int i = 0; i < 8; i++)
-        //     matrixFS[i] = new int[15]; // ilosc kolumn
-
-        // for(int i = 0; i < 4; i++)
-        //     matrixSS[i] = new int[15];
 }
 
 int* Multiplier::getResult(){
@@ -59,9 +49,30 @@ void Multiplier::showMatrixSS(){
     }
 }
 
+void Multiplier::showMatrixFinal(){
+    for(int i = 0; i < 4; i++){
+        if(i == 0){
+            for(int j = 14; j >= 0; j--)
+                std::cout << matrixFinal[i][j] << " ";
+            std::cout << std::endl;
+        }
+        if(i == 1){
+            for(int j = 14; j >= 1; j--)
+                std::cout << matrixFinal[i][j] << " ";
+            std::cout << std::endl;
+        }
+    }
+}
+
 void Multiplier::multiply(int* firstNumber, int* secondNumber){
 
     fillMatrixFS(firstNumber, secondNumber); // wypelnianie macierzy w pierwszym kroku
+    firstStage(firstNumber, secondNumber); // pierwszy etap mnozenia
+    secondStage(firstNumber, secondNumber); // drugi etap mnozenia
+
+}
+
+void Multiplier::firstStage(int* firstNumber, int* secondNumber){
 
     Adder halfadder[3], fulladder[2];
     Pro1 pro[4];
@@ -200,6 +211,107 @@ void Multiplier::multiply(int* firstNumber, int* secondNumber){
     matrixSS[1][13] = matrixFS[7][13];
 
     matrixSS[0][14] = matrixFS[7][14];
+}
+
+void Multiplier::secondStage(int* firstNumber, int* secondNumber){
+
+    Adder halfadder, fulladder;
+    Pro1 pro[5];
+    Exact exact[5];
+
+    matrixFinal[0][0] = matrixSS[0][0];
+    matrixFinal[0][1] = matrixSS[0][1];
+    matrixFinal[1][1] = matrixSS[1][1];
+
+    int* tab;
+
+    tab = new int[2];
+    tab[0] = matrixSS[0][2];
+    tab[1] = matrixSS[1][2];
+    halfadder.half_circuit(tab);
+    matrixFinal[0][2] = halfadder.getS();
+    matrixFinal[1][2] = matrixSS[2][2];
+
+    tab = new int[4];
+    for(int i = 0; i < 4; i++)
+        tab[i] = matrixSS[i][3];
+    pro[0].circuit(tab);
+    matrixFinal[0][3] = halfadder.getC_out();
+    matrixFinal[1][3] = pro[0].getS();
+
+    tab = new int[4];
+    for(int i = 0; i < 4; i++)
+        tab[i] = matrixSS[i][4];
+    pro[1].circuit(tab);
+    matrixFinal[0][4] = pro[0].getC();
+    matrixFinal[1][4] = pro[1].getS();
+
+    tab = new int[4];
+    for(int i = 0; i < 4; i++)
+        tab[i] = matrixSS[i][5];
+    pro[2].circuit(tab);
+    matrixFinal[0][5] = pro[1].getC();
+    matrixFinal[1][5] = pro[2].getS();
+
+    tab = new int[4];
+    for(int i = 0; i < 4; i++)
+        tab[i] = matrixSS[i][6];
+    pro[3].circuit(tab);
+    matrixFinal[0][6] = pro[2].getC();
+    matrixFinal[1][6] = pro[3].getS();
+
+    tab = new int[4];
+    for(int i = 0; i < 4; i++)
+        tab[i] = matrixSS[i][7];
+    pro[4].circuit(tab);
+    matrixFinal[0][7] = pro[3].getC();
+    matrixFinal[1][7] = pro[4].getS();
+
+    tab = new int[4];
+    for(int i = 0; i < 4; i++)
+        tab[i] = matrixSS[i][8];
+    exact[0].circuit(tab, 0);
+    matrixFinal[0][8] = pro[4].getC();
+    matrixFinal[1][8] = exact[0].getS();
+
+    tab = new int[4];
+    for(int i = 0; i < 4; i++)
+        tab[i] = matrixSS[i][9];
+    exact[1].circuit(tab, exact[0].getC_out());
+    matrixFinal[0][9] = exact[0].getcarry();
+    matrixFinal[1][9] = exact[1].getS();
+
+    tab = new int[4];
+    for(int i = 0; i < 4; i++)
+        tab[i] = matrixSS[i][10];
+    exact[2].circuit(tab, exact[1].getC_out());
+    matrixFinal[0][10] = exact[1].getcarry();
+    matrixFinal[1][10] = exact[2].getS();
+
+    tab = new int[4];
+    for(int i = 0; i < 4; i++)
+        tab[i] = matrixSS[i][11];
+    exact[3].circuit(tab, exact[2].getC_out());
+    matrixFinal[0][11] = exact[2].getcarry();
+    matrixFinal[1][11] = exact[3].getS();
+
+    tab = new int[4];
+    for(int i = 0; i < 4; i++)
+        tab[i] = matrixSS[i][12];
+    exact[4].circuit(tab, exact[3].getC_out());
+    matrixFinal[0][12] = exact[3].getcarry();
+    matrixFinal[1][12] = exact[4].getS();
+
+    tab = new int[3];
+    for(int i = 0; i < 2; i++)
+        tab[i] = matrixSS[i][13];
+    tab[2] = exact[4].getC_out();
+    fulladder.full_circuit(tab);
+    matrixFinal[0][13] = exact[4].getcarry();
+    matrixFinal[1][13] = fulladder.getS();
+
+    matrixFinal[0][14] = fulladder.getC_out();
+    matrixFinal[1][14] = matrixSS[0][14];
 
 }
 
