@@ -6,10 +6,8 @@
 #include<iostream>
 
 Multiplier::Multiplier(){
-}
-
-int* Multiplier::getResult(){
-    return result;
+    result = new int[16];
+    intResult = 0;
 }
 
 void Multiplier::showMatrixSS(){
@@ -64,12 +62,59 @@ void Multiplier::showMatrixFinal(){
     }
 }
 
+void Multiplier::getMultiplyResult(){
+    for(int j = 15; j >= 0; j--)
+        std::cout << result[j] << " ";
+}
+
+int Multiplier::getDecimalResult(){
+
+    int multiplyNumber = 1;
+
+    for(int j = 0; j <=15; j++){
+        intResult += (result[j] * multiplyNumber);
+        multiplyNumber *= 2;
+    }
+
+    return intResult;
+}
+
 void Multiplier::multiply(int* firstNumber, int* secondNumber){
 
     fillMatrixFS(firstNumber, secondNumber); // wypelnianie macierzy w pierwszym kroku
     firstStage(firstNumber, secondNumber); // pierwszy etap mnozenia
     secondStage(firstNumber, secondNumber); // drugi etap mnozenia
+    finalStage(); // zsumowanie pozostalych bitow
 
+}
+
+void Multiplier::finalStage(){
+    int carry = 0;
+
+    for(int i = 0; i <= 15; i++){
+        result[i] = 0;
+
+        if(i == 0){
+            result[i] += matrixFinal[0][i];
+        }
+        else if(i < 15){
+            for(int j = 0; j < 2; j++)
+                result[i] += matrixFinal[j][i];
+        }
+
+        result[i] += carry;
+
+        if(result[i] == 2){
+            result[i] = 0;
+            carry = 1;
+        }
+        else if(result[i] == 3){
+            result[i] = 1;
+            carry = 1;
+        }
+        else
+            carry = 0;
+    }
 }
 
 void Multiplier::firstStage(int* firstNumber, int* secondNumber){
