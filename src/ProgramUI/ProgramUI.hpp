@@ -4,6 +4,7 @@
 class ProgramUI{
     public:
     static void welcomeMessage();
+    static void showResults(int*, int*);
 };
 
 

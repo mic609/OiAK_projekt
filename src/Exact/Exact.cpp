@@ -22,7 +22,7 @@ int Exact::getS(){
 void Exact::circuit(int* inp, int c_in){
     Adder adder1, adder2;
 
-    int* tabA = new int[3];
+    int tabA[3];
 
     int j = 3;
 
@@ -34,8 +34,7 @@ void Exact::circuit(int* inp, int c_in){
     adder1.full_circuit(tabA);
 
     C_out = adder1.getC_out();
-
-    tabA = new int[3];
+    
     tabA[0] = adder1.getS();
     tabA[1] = inp[0];
     tabA[2] = c_in;

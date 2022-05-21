@@ -98,15 +98,13 @@ void Gate::f_xor(int* inp, int n){
 }
 
 void Gate::f_ao222(int* inp){
-    Gate* andg; // bramka and
+    Gate andg[3]; // bramka and
     Gate norg; // bramka nor
-    int* andoutp = new int[3]; // dane wyjsciowe z bramek and
-    
-    andg = new Gate [3]; // 3 bramki and
+    int andoutp[3]; // dane wyjsciowe z bramek and
 
+    int andinp[2];
     int and_num = 0; // numer bramki and
     for(int i = 0; i < 6; i+=2){
-        int *andinp = new int[2]; // tworzymy tablice 2 wejsc do bramki and
 
         int k = i;
         for(int j = 0; j < 2; j++){ // nastepuje przypisanie odpowiednich wartosci z tablicy inp do andinp
@@ -117,27 +115,21 @@ void Gate::f_ao222(int* inp){
         andg[and_num].f_and(andinp, 2); // obliczamy wyjscie
         andoutp[and_num] = andg[and_num].gateValue(); // wyjscie pojedynczej bramki and
         and_num ++;
-        delete [] andinp;
     }
 
     norg.f_or(andoutp, 3); // obliczamy finalne wyjscie na podstawie wczesniej obliczonych wyjsc bramek and
     g_outp = norg.gateValue();
-
-    delete [] andoutp;
-    delete [] andg;
 }
 
 void Gate::f_aoi22(int* inp){
 
-    Gate* andg; // bramki and
+    Gate andg[2]; // bramki and
     Gate norg; // bramka nor
-    int* andoutp = new int[2]; // dane wyjsciowe z bramek and
-    
-    andg = new Gate [2]; // 2 bramki and
+    int andoutp[2]; // dane wyjsciowe z bramek and
 
+    int andinp[2]; // tworzymy tablice 2 wejsc do bramki and
     int and_num = 0; // numer bramki and
     for(int i = 0; i < 4; i+=2){
-        int *andinp = new int[2]; // tworzymy tablice 2 wejsc do bramki and
 
         int k = i;
         for(int j = 0; j < 2; j++){ // nastepuje przypisanie odpowiednich wartosci z tablicy inp do andinp
@@ -148,12 +140,8 @@ void Gate::f_aoi22(int* inp){
         andg[and_num].f_and(andinp, 2); // obliczamy wyjscie
         andoutp[and_num] = andg[and_num].gateValue(); // wyjscie pojedynczej bramki and
         and_num ++;
-        delete [] andinp;
     }
 
     norg.f_nor(andoutp, 2); // obliczamy finalne wyjscie na podstawie wczesniej obliczonych wyjsc bramek and
     g_outp = norg.gateValue();
-
-    delete [] andoutp;
-    delete [] andg;
 }

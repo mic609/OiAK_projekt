@@ -1,16 +1,15 @@
-#include<Multiplier.hpp>
+#include<ExactMultiplier.hpp>
 #include<Adder.hpp>
-#include<Pro1.hpp>
 #include<Exact.hpp>
 
 #include<iostream>
 
-Multiplier::Multiplier(){
+ExactMultiplier::ExactMultiplier(){
     result = new int[16];
     intResult = 0;
 }
 
-void Multiplier::showMatrixFS(){
+void ExactMultiplier::showMatrixFS(){
 
     int move = 0;
 
@@ -32,7 +31,7 @@ void Multiplier::showMatrixFS(){
     }
 }
 
-void Multiplier::showMatrixSS(){
+void ExactMultiplier::showMatrixSS(){
     for(int i = 0; i < 4; i++){
         if(i == 0){
             for(int j = 14; j >= 0; j--)
@@ -69,7 +68,7 @@ void Multiplier::showMatrixSS(){
     }
 }
 
-void Multiplier::showMatrixFinal(){
+void ExactMultiplier::showMatrixFinal(){
     for(int i = 0; i < 4; i++){
         if(i == 0){
             for(int j = 14; j >= 0; j--)
@@ -84,12 +83,12 @@ void Multiplier::showMatrixFinal(){
     }
 }
 
-void Multiplier::getMultiplyResult(){
+void ExactMultiplier::getMultiplyResult(){
     for(int j = 15; j >= 0; j--)
         std::cout << result[j] << " ";
 }
 
-int Multiplier::getDecimalResult(){
+int ExactMultiplier::getDecimalResult(){
 
     int multiplyNumber = 1;
 
@@ -101,19 +100,19 @@ int Multiplier::getDecimalResult(){
     return intResult;
 }
 
-void Multiplier::multiply(int* firstNumber, int* secondNumber){
+void ExactMultiplier::multiply(int* firstNumber, int* secondNumber){
 
     fillMatrixFS(firstNumber, secondNumber); // wypelnianie macierzy w pierwszym kroku
     firstStage(firstNumber, secondNumber); // pierwszy etap mnozenia
     secondStage(firstNumber, secondNumber); // drugi etap mnozenia
     finalStage(); // zsumowanie pozostalych bitow
+
 }
 
-void Multiplier::firstStage(int* firstNumber, int* secondNumber){
+void ExactMultiplier::firstStage(int* firstNumber, int* secondNumber){
 
-    Adder halfadder[3], fulladder[2];
-    Pro1 pro[4];
-    Exact exact[3];
+    Adder halfadder[2], fulladder[2];
+    Exact exact[9];
 
     // Uwaga! Przypisanie, ktore nastepuje przed procesem wykonania obliczen na danej kolumnie, to przeniesienie
     // z poprzedniej kolumny!
@@ -148,103 +147,106 @@ void Multiplier::firstStage(int* firstNumber, int* secondNumber){
     matrixSS[2][4] = matrixFS[3][4]; //przypisanie
     matrixSS[3][4] = matrixFS[4][4]; //przypisanie
 
-    //kolumna 5 - pro1
+    //kolumna 5 - exact
     matrixSS[0][5] = halfadder[0].getC_out(); //przypisanie
     tab = new int[4];
     tab[0] = matrixFS[0][5];
     tab[1] = matrixFS[1][5];
     tab[2] = matrixFS[2][5];
     tab[3] = matrixFS[3][5];
-    pro[0].circuit(tab);
-    matrixSS[1][5] = pro[0].getS(); //przypisanie
+    exact[0].circuit(tab, 0);
+    matrixSS[1][5] = exact[0].getS(); //przypisanie
     matrixSS[2][5] = matrixFS[4][5]; //przypisanie
     matrixSS[3][5] = matrixFS[5][5]; //przypisanie
     
-    //kolumna 6 - pro1, half adder
-    matrixSS[0][6] = pro[0].getC(); //przypisanie
+    //kolumna 6 - exact, half adder
+    matrixSS[0][6] = exact[0].getcarry(); //przypisanie
     tab = new int[4];
     tab[0] = matrixFS[0][6];
     tab[1] = matrixFS[1][6];
     tab[2] = matrixFS[2][6];
     tab[3] = matrixFS[3][6];
-    pro[1].circuit(tab);
+    exact[1].circuit(tab, exact[0].getC_out());
     tab = new int[2];
     tab[0] = matrixFS[4][6];
     tab[1] = matrixFS[5][6];
     halfadder[1].half_circuit(tab);
-    matrixSS[1][6] = pro[1].getS(); //przypisanie
+    matrixSS[1][6] = exact[1].getS(); //przypisanie
     matrixSS[2][6] = halfadder[1].getS(); //przypisanie
     matrixSS[3][6] = matrixFS[6][6]; //przypisanie
 
-    //kolumna 7 - 2 x pro1
-    matrixSS[0][7] = pro[1].getC(); //przypisanie
+    //kolumna 7 - 2 x exact
+    matrixSS[0][7] = exact[1].getcarry(); //przypisanie
     matrixSS[1][7] = halfadder[1].getC_out(); //przypisanie
     tab = new int[4];
     tab[0] = matrixFS[0][7];
     tab[1] = matrixFS[1][7];
     tab[2] = matrixFS[2][7];
     tab[3] = matrixFS[3][7];
-    pro[2].circuit(tab);
+    exact[2].circuit(tab, exact[1].getC_out());
     tab = new int[4];
     tab[0] = matrixFS[4][7];
     tab[1] = matrixFS[5][7];
     tab[2] = matrixFS[6][7];
     tab[3] = matrixFS[7][7];
-    pro[3].circuit(tab);
-    matrixSS[2][7] = pro[2].getS(); //przypisanie
-    matrixSS[3][7] = pro[3].getS(); //przypisanie
+    exact[3].circuit(tab, 0);
+    matrixSS[2][7] = exact[2].getS(); //przypisanie
+    matrixSS[3][7] = exact[3].getS(); //przypisanie
 
-    //kolumna 8 - exact, full adder
-    matrixSS[0][8] = pro[2].getC(); //przypisanie
-    matrixSS[1][8] = pro[3].getC(); //przypisanie
+    //kolumna 8 - 2 x exact
+    matrixSS[0][8] = exact[2].getcarry(); //przypisanie
+    matrixSS[1][8] = exact[3].getcarry(); //przypisanie
     tab = new int[4];
     tab[0] = matrixFS[1][8];
     tab[1] = matrixFS[2][8];
     tab[2] = matrixFS[3][8];
     tab[3] = matrixFS[4][8];
-    exact[0].circuit(tab, 0);
+    exact[4].circuit(tab, exact[2].getC_out());
     tab = new int[3];
     tab[0] = matrixFS[5][8];
     tab[1] = matrixFS[6][8];
     tab[2] = matrixFS[7][8];
-    fulladder[0].full_circuit(tab);
-    matrixSS[2][8] = exact[0].getS(); //przypisanie
-    matrixSS[3][8] = fulladder[0].getS(); //przypisanie
+    tab[3] = 0;
+    exact[5].circuit(tab, exact[3].getC_out());
+    matrixSS[2][8] = exact[4].getS(); //przypisanie
+    matrixSS[3][8] = exact[5].getS(); //przypisanie
 
-    //kolumna 9 - exact, half adder
-    matrixSS[0][9] = exact[0].getcarry(); //przypisanie
-    matrixSS[1][9] = fulladder[0].getC_out(); //przypisanie
+    //kolumna 9 - exact, full adder
+    matrixSS[0][9] = exact[4].getcarry(); //przypisanie
+    matrixSS[1][9] = exact[5].getcarry(); //przypisanie
     tab = new int[4];
     tab[0] = matrixFS[2][9];
     tab[1] = matrixFS[3][9];
     tab[2] = matrixFS[4][9];
     tab[3] = matrixFS[5][9];
-    exact[1].circuit(tab, exact[0].getC_out());
+    exact[6].circuit(tab, exact[4].getC_out());
     tab = new int[2];
     tab[0] = matrixFS[6][9];
     tab[1] = matrixFS[7][9];
-    halfadder[2].half_circuit(tab);
-    matrixSS[2][9] = exact[1].getS(); //przypisanie
-    matrixSS[3][9] = halfadder[2].getS(); //przypisanie
+    tab[2] = exact[5].getC_out();
+    fulladder[0].full_circuit(tab);
+    matrixSS[2][9] = exact[6].getS(); //przypisanie
+    matrixSS[3][9] = fulladder[0].getS(); //przypisanie
 
     //kolumna 10 - exact
-    matrixSS[0][10] = exact[1].getcarry(); //przypisanie
-    matrixSS[1][10] = halfadder[2].getC_out(); //przypisanie
+    matrixSS[0][10] = exact[6].getcarry(); //przypisanie
+    matrixSS[1][10] = fulladder[0].getC_out(); //przypisanie
     tab = new int[4];
     tab[0] = matrixFS[3][10];
     tab[1] = matrixFS[4][10];
     tab[2] = matrixFS[5][10];
     tab[3] = matrixFS[6][10];
-    exact[2].circuit(tab, exact[1].getC_out());
-    matrixSS[2][10] = exact[2].getS(); //przypisanie
+    exact[7].circuit(tab, exact[6].getC_out());
+    tab = new int[4];
+    matrixSS[2][10] = exact[7].getS(); //przypisanie
     matrixSS[3][10] = matrixFS[7][10]; //przypisanie
 
     //kolumna 11 - full adder
-    matrixSS[0][11] = exact[2].getcarry(); //przypisanie
-    tab = new int [3];
+    matrixSS[0][11] = exact[7].getcarry(); //przypisanie
+    tab = new int [2];
     tab[0] = matrixFS[4][11];
     tab[1] = matrixFS[5][11];
-    tab[2] = exact[2].getC_out();
+    tab[2] = exact[7].getC_out();
     fulladder[1].full_circuit(tab);
     matrixSS[1][11] = fulladder[1].getS(); //przypisanie
     matrixSS[2][11] = matrixFS[6][11]; //przypisanie
@@ -264,11 +266,10 @@ void Multiplier::firstStage(int* firstNumber, int* secondNumber){
     matrixSS[0][14] = matrixFS[7][14]; //przypisanie
 }
 
-void Multiplier::secondStage(int* firstNumber, int* secondNumber){
+void ExactMultiplier::secondStage(int* firstNumber, int* secondNumber){
 
     Adder halfadder, fulladder;
-    Pro1 pro[5];
-    Exact exact[5];
+    Exact exact[10];
 
     // Uwaga! Przypisanie, ktore nastepuje przed procesem wykonania obliczen na danej kolumnie, to przeniesienie
     // z poprzedniej kolumny!
@@ -290,101 +291,102 @@ void Multiplier::secondStage(int* firstNumber, int* secondNumber){
     matrixFinal[0][2] = halfadder.getS(); //przypisanie
     matrixFinal[1][2] = matrixSS[2][2]; //przypisanie
 
-    //kolumna 3 - pro1
+    //kolumna 3 - exact
     matrixFinal[0][3] = halfadder.getC_out(); //przypisanie
     tab = new int[4];
     for(int i = 0; i < 4; i++)
         tab[i] = matrixSS[i][3];
-    pro[0].circuit(tab);
-    matrixFinal[1][3] = pro[0].getS(); //przypisanie
+    exact[0].circuit(tab, 0);
+    matrixFinal[1][3] = exact[0].getS(); //przypisanie
 
-    //kolumna 4 - pro1
-    matrixFinal[0][4] = pro[0].getC(); //przypisanie
+    //kolumna 4 - exact
+    matrixFinal[0][4] = exact[0].getcarry(); //przypisanie
     tab = new int[4];
     for(int i = 0; i < 4; i++)
         tab[i] = matrixSS[i][4];
-    pro[1].circuit(tab);
-    matrixFinal[1][4] = pro[1].getS(); //przypisanie
+    exact[1].circuit(tab, exact[0].getC_out());
+    matrixFinal[1][4] = exact[1].getS(); //przypisanie
 
-    //kolumna 5 - pro1
-    matrixFinal[0][5] = pro[1].getC(); //przypisanie
+    //kolumna 5 - exact
+    matrixFinal[0][5] = exact[1].getcarry(); //przypisanie
     tab = new int[4];
     for(int i = 0; i < 4; i++)
         tab[i] = matrixSS[i][5];
-    pro[2].circuit(tab);
-    matrixFinal[1][5] = pro[2].getS(); //przypisanie
+    exact[2].circuit(tab, exact[1].getC_out());
+    matrixFinal[1][5] = exact[2].getS(); //przypisanie
 
-    //kolumna 6 - pro1
-    matrixFinal[0][6] = pro[2].getC(); //przypisanie
+    //kolumna 6 - exact
+    matrixFinal[0][6] = exact[2].getcarry(); //przypisanie
     tab = new int[4];
     for(int i = 0; i < 4; i++)
         tab[i] = matrixSS[i][6];
-    pro[3].circuit(tab);
-    matrixFinal[1][6] = pro[3].getS(); //przypisanie
+    exact[3].circuit(tab, exact[2].getC_out());
+    matrixFinal[1][6] = exact[3].getS(); //przypisanie
 
-    //kolumna 7 - pro1
-    matrixFinal[0][7] = pro[3].getC(); //przypisanie
+    //kolumna 7 - exact
+    matrixFinal[0][7] = exact[3].getcarry(); //przypisanie
     tab = new int[4];
     for(int i = 0; i < 4; i++)
         tab[i] = matrixSS[i][7];
-    pro[4].circuit(tab);
-    matrixFinal[1][7] = pro[4].getS(); //przypisanie
+    exact[4].circuit(tab, exact[3].getC_out());
+    matrixFinal[1][7] = exact[4].getS(); //przypisanie
 
     //kolumna 8 - exact
-    matrixFinal[0][8] = pro[4].getC(); //przypisanie
+    matrixFinal[0][8] = exact[4].getcarry(); //przypisanie
     tab = new int[4];
     for(int i = 0; i < 4; i++)
         tab[i] = matrixSS[i][8];
-    exact[0].circuit(tab, 0);
-    matrixFinal[1][8] = exact[0].getS(); //przypisanie
+    exact[5].circuit(tab, exact[4].getC_out());
+    matrixFinal[1][8] = exact[5].getS(); //przypisanie
 
     //kolumna 9 - exact
-    matrixFinal[0][9] = exact[0].getcarry(); //przypisanie
+    matrixFinal[0][9] = exact[5].getcarry(); //przypisanie
     tab = new int[4];
     for(int i = 0; i < 4; i++)
         tab[i] = matrixSS[i][9];
-    exact[1].circuit(tab, exact[0].getC_out());
-    matrixFinal[1][9] = exact[1].getS(); //przypisanie
+    exact[6].circuit(tab, exact[5].getC_out());
+    matrixFinal[1][9] = exact[6].getS(); //przypisanie
 
     //kolumna 10 - exact
-    matrixFinal[0][10] = exact[1].getcarry(); //przypisanie
+    matrixFinal[0][10] = exact[6].getcarry(); //przypisanie
     tab = new int[4];
     for(int i = 0; i < 4; i++)
         tab[i] = matrixSS[i][10];
-    exact[2].circuit(tab, exact[1].getC_out());
-    matrixFinal[1][10] = exact[2].getS(); //przypisanie
+    exact[7].circuit(tab, exact[6].getC_out());
+    matrixFinal[1][10] = exact[7].getS(); //przypisanie
 
     //kolumna 11 - exact
-    matrixFinal[0][11] = exact[2].getcarry(); //przypisanie
+    matrixFinal[0][11] = exact[7].getcarry(); //przypisanie
     tab = new int[4];
     for(int i = 0; i < 4; i++)
         tab[i] = matrixSS[i][11];
-    exact[3].circuit(tab, exact[2].getC_out());
-    matrixFinal[1][11] = exact[3].getS(); //przypisanie
+    exact[8].circuit(tab, exact[7].getC_out());
+    matrixFinal[1][11] = exact[8].getS(); //przypisanie
 
     //kolumna 12 - exact
-    matrixFinal[0][12] = exact[3].getcarry(); //przypisanie
+    matrixFinal[0][12] = exact[8].getcarry(); //przypisanie
     tab = new int[4];
     for(int i = 0; i < 4; i++)
         tab[i] = matrixSS[i][12];
-    exact[4].circuit(tab, exact[3].getC_out());
-    matrixFinal[1][12] = exact[4].getS(); //przypisanie
+    exact[9].circuit(tab, exact[8].getC_out());
+    matrixFinal[1][12] = exact[9].getS(); //przypisanie
 
     //kolumna 13 - full adder
-    matrixFinal[0][13] = exact[4].getcarry(); //przypisanie
+    matrixFinal[0][13] = exact[9].getcarry(); //przypisanie
     tab = new int[3];
     for(int i = 0; i < 2; i++)
         tab[i] = matrixSS[i][13];
-    tab[2] = exact[4].getC_out();
+    tab[2] = exact[9].getC_out();
     fulladder.full_circuit(tab);
     matrixFinal[1][13] = fulladder.getS(); //przypisanie
 
     //kolumna 14
     matrixFinal[0][14] = fulladder.getC_out(); //przypisanie
-    matrixFinal[1][14] = matrixSS[0][14]; //przypisanie
+    matrixFinal[1][14] = matrixSS[0][14]; //przypisanieS
+
 }
 
-void Multiplier::finalStage(){
+void ExactMultiplier::finalStage(){
     int carry = 0;
 
     for(int i = 0; i <= 15; i++){
@@ -413,7 +415,7 @@ void Multiplier::finalStage(){
     }
 }
 
-void Multiplier::fillMatrixFS(int* firstNumber, int* secondNumber){
+void ExactMultiplier::fillMatrixFS(int* firstNumber, int* secondNumber){
 
     int move = 0;
     int k = 7;

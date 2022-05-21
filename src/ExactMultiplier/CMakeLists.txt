@@ -1,13 +1,13 @@
-set(MODULE_NAME programUI)
+set(MODULE_NAME exactMultiplier)
 
 message("compile ${MODULE_NAME}")
 
 set(INTERNAL_FILES
-    ProgramUI.cpp
+    ExactMultiplier.cpp
 )
 
 set(PUBLIC_HEADERS
-    ProgramUI.hpp
+    ExactMultiplier.hpp
 )
 
 add_library(
@@ -25,10 +25,9 @@ target_include_directories(
 )
 
 target_link_libraries(${MODULE_NAME}
-  lib::gate
-  lib::pro1
-  lib::multiplier
-  lib::exactMultiplier
+  PRIVATE
+  lib::adder
+  lib::exact
 )
 
 add_library(lib::${MODULE_NAME} ALIAS ${MODULE_NAME})

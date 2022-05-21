@@ -19,15 +19,13 @@ void Adder::full_circuit(int *inp){ // 3 wejscia
 
     int xor1_out, nor_inp[2];
 
-    int *tabA = new int [2];
+    int tabA[2];
     tabA[0] = inp[0];
     tabA[1] = inp[1];
 
     xor1.f_xor(inp, 2);
     xor1_out = xor1.gateValue();
 
-
-    tabA = new int [2];
     tabA[0] = xor1_out;
     tabA[1] = inp[2];
 

@@ -1,6 +1,8 @@
 #include <Pro1.hpp>
 #include <Gate.hpp>
 
+#include<iostream>
+
 Pro1::Pro1(){
     S = 0;
     C = 0;
@@ -16,24 +18,23 @@ int Pro1::getS(){
 
 void Pro1::circuit(int *inp){
 
-    int *a_input = new int [2];
-    int *b_input = new int [2];
-    int *c_input = new int [2];
-    int *d_input = new int [2];
+    int a_input[2];
+    int b_input[2];
+    int c_input[2];
+    int d_input[2];
 
-    for(int i = 0; i < 2; i++)
+    for(int i = 0; i < 2; i++){
         a_input[i] = inp[i];
-
-    b_input = a_input;
+        b_input[i] = inp[i];
+    }
 
     int k = 2;
     for(int i = 0; i < 2; i++)
     {
         c_input[i] = inp[k];
+        d_input[i] = inp[k];
         k++;
     }
-
-    d_input = c_input;
 
     int A, B, C, D;
     A = calA(a_input);
@@ -46,17 +47,13 @@ void Pro1::circuit(int *inp){
 
     sinput = calD(a_input); // ten sam mini ukladzik ale inne wejscia
 
-    delete [] a_input;
-
     cinput = calB(c_input);
-
-    delete [] c_input;
 
     Gate gate1, gate2;
     Gate not1, not4, not5, not6;
 
     int* gate1_input = new int [6];
-    int* gate2_input = new int [6];
+    int* gate2_input = new int [4];
 
     not1.f_not(sinput);
     gate1_input[0] = not1.gateValue();
@@ -82,6 +79,7 @@ void Pro1::circuit(int *inp){
 
     S = gate1.gateValue();
     this->C = gate2.gateValue();
+
 }
 
 int Pro1::calA(int *inp){
@@ -104,7 +102,7 @@ int Pro1::calC(int *inp){
 
 int Pro1::calD(int *inp){
     Gate nor, nand1, nand2, notgate;
-    int *output = new int [2];
+    int* output = new int [2];
 
     nor.f_nor(inp, 2);
     output[0] = nor.gateValue();
@@ -116,8 +114,6 @@ int Pro1::calD(int *inp){
     output[1] = nand1.gateValue();
 
     nand2.f_nand(output, 2);
-
-    delete [] output;
 
     return nand2.gateValue();
 }

@@ -1,7 +1,7 @@
-#ifndef MULTIPLIER_HPP
-#define MULTIPLIER_HPP
+#ifndef EXACTMULTIPLIER_HPP
+#define EXACTMULTIPLIER_HPP
 
-class Multiplier{
+class ExactMultiplier{
 
     private:
 
@@ -12,7 +12,7 @@ class Multiplier{
     int matrixFinal[2][15];
 
     public:
-    Multiplier();
+    ExactMultiplier();
     void multiply(int*, int*);
     void getMultiplyResult();
     int getDecimalResult();
