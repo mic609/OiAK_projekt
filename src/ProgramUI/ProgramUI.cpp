@@ -61,14 +61,27 @@ void ProgramUI::showResults(int* tab1, int*tab2){
 }
 
 void ProgramUI::welcomeMessage(){
-    int tab1[8] = {1, 1, 1, 1, 1, 1, 1, 1};
-    int tab2[8] = {1, 1, 1, 1, 1, 1, 1, 1};
 
-    showResults(tab1, tab2);
+    int tab1[8], tab2[8];
 
+    std::cout << std::endl;
     ErrorMetrics::show_ER();
     ErrorMetrics::show_NMED();
     ErrorMetrics::show_MRED();
     ErrorMetrics::show_NoEB();
     ErrorMetrics::show_PRED();
+
+    while(true){
+        std::cout << "Cyfry nalezy rozdzielac spacja!" << std::endl;
+        std::cout << "Wpisz pierwsza liczbe: " << std::endl;
+        for(int i = 0; i < 8; i++){
+            std::cin >> tab1[i];
+        }
+        std::cout << "Wpisz druga liczbe: " << std::endl;
+        for(int i = 0; i < 8; i++){
+            std::cin >> tab2[i];
+        }
+
+        showResults(tab1, tab2);
+    }
 }
