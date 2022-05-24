@@ -1,13 +1,13 @@
-set(MODULE_NAME programUI)
+set(MODULE_NAME errorMetrics)
 
 message("compile ${MODULE_NAME}")
 
 set(INTERNAL_FILES
-    ProgramUI.cpp
+    ErrorMetrics.cpp
 )
 
 set(PUBLIC_HEADERS
-    ProgramUI.hpp
+   ErrorMetrics.hpp
 )
 
 add_library(
@@ -29,7 +29,6 @@ target_link_libraries(${MODULE_NAME}
   lib::pro1
   lib::multiplier
   lib::exactMultiplier
-  lib::errorMetrics
 )
 
 add_library(lib::${MODULE_NAME} ALIAS ${MODULE_NAME})
