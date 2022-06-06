@@ -8,7 +8,9 @@ add_subdirectory(Exact)
 add_subdirectory(ExactMultiplier)
 add_subdirectory(Gate)
 add_subdirectory(Multiplier)
+add_subdirectory(MultiplierB)
 add_subdirectory(Pro1)
+add_subdirectory(Pro2)
 add_subdirectory(ProgramUI)
 
 add_executable(

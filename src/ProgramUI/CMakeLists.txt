@@ -27,7 +27,9 @@ target_include_directories(
 target_link_libraries(${MODULE_NAME}
   lib::gate
   lib::pro1
+  lib::pro2
   lib::multiplier
+  lib::multiplierB
   lib::exactMultiplier
   lib::errorMetrics
 )

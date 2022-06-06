@@ -1,7 +1,9 @@
 #include<ProgramUI.hpp>
 #include<Gate.hpp>
 #include<Pro1.hpp>
+#include<Pro2.hpp>
 #include<Multiplier.hpp>
+#include<MultiplierB.hpp>
 #include<ExactMultiplier.hpp>
 #include<ErrorMetrics.hpp>
 
@@ -10,6 +12,7 @@
 void ProgramUI::showResults(int* tab1, int*tab2){
 
     Multiplier test;
+    MultiplierB testb;
     ExactMultiplier p;
 
     test.multiply(tab1, tab2);
@@ -26,13 +29,37 @@ void ProgramUI::showResults(int* tab1, int*tab2){
     test.showMatrixFinal();
     std::cout << std::endl << std::endl;
 
-    std::cout << "APPROXIMATE MULTIPLIER";
+    std::cout << "APPROXIMATE MULTIPLIER (pro1)";
     std::cout << std::endl;
     std::cout << "BINARY RESULT: ";
     test.getMultiplyResult();
     std::cout << std::endl;
     std::cout << "DECIMAL RESULT: ";
     std::cout << test.getDecimalResult();
+
+    std::cout << std::endl << std::endl;
+
+    testb.multiply(tab1, tab2);
+
+    std::cout << std::endl;
+    testb.showMatrixFS();
+    for(int i = 0; i < 15; i++) std::cout << "- ";
+    std::cout << std::endl;
+
+    testb.showMatrixSS();
+    for(int i = 0; i < 15; i++) std::cout << "- ";
+    std::cout << std::endl;
+
+    testb.showMatrixFinal();
+    std::cout << std::endl << std::endl;
+
+    std::cout << "APPROXIMATE MULTIPLIER (pro3)";
+    std::cout << std::endl;
+    std::cout << "BINARY RESULT: ";
+    testb.getMultiplyResult();
+    std::cout << std::endl;
+    std::cout << "DECIMAL RESULT: ";
+    std::cout << testb.getDecimalResult();
 
     std::cout << std::endl << std::endl;
 
@@ -84,4 +111,5 @@ void ProgramUI::welcomeMessage(){
 
         showResults(tab1, tab2);
     }
+
 }

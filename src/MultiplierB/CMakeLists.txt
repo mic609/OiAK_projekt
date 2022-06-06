@@ -1,13 +1,13 @@
-set(MODULE_NAME errorMetrics)
+set(MODULE_NAME multiplierB)
 
 message("compile ${MODULE_NAME}")
 
 set(INTERNAL_FILES
-    ErrorMetrics.cpp
+    MultiplierB.cpp
 )
 
 set(PUBLIC_HEADERS
-   ErrorMetrics.hpp
+    MultiplierB.hpp
 )
 
 add_library(
@@ -25,11 +25,10 @@ target_include_directories(
 )
 
 target_link_libraries(${MODULE_NAME}
-  lib::gate
-  lib::pro1
-  lib::multiplier
-  lib::multiplierB
-  lib::exactMultiplier
+  PRIVATE
+  lib::adder
+  lib::pro2
+  lib::exact
 )
 
 add_library(lib::${MODULE_NAME} ALIAS ${MODULE_NAME})

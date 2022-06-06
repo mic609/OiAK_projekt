@@ -121,6 +121,31 @@ void Gate::f_ao222(int* inp){
     g_outp = norg.gateValue();
 }
 
+void Gate::f_ao22(int* inp){
+
+    Gate andg[2]; // bramki and
+    Gate org; // bramka nor
+    int andoutp[2]; // dane wyjsciowe z bramek and
+
+    int andinp[2]; // tworzymy tablice 2 wejsc do bramki and
+    int and_num = 0; // numer bramki and
+    for(int i = 0; i < 4; i+=2){
+
+        int k = i;
+        for(int j = 0; j < 2; j++){ // nastepuje przypisanie odpowiednich wartosci z tablicy inp do andinp
+            andinp[j] = inp[k];
+            k++;
+        }
+
+        andg[and_num].f_and(andinp, 2); // obliczamy wyjscie
+        andoutp[and_num] = andg[and_num].gateValue(); // wyjscie pojedynczej bramki and
+        and_num ++;
+    }
+
+    org.f_or(andoutp, 2); // obliczamy finalne wyjscie na podstawie wczesniej obliczonych wyjsc bramek and
+    g_outp = org.gateValue();
+}
+
 void Gate::f_aoi22(int* inp){
 
     Gate andg[2]; // bramki and
